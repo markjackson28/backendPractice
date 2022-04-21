@@ -9,6 +9,7 @@ router.get('/', getDefaultRoute);
 router.get('/recipes', getRecipeNames);
 router.get('/recipes/details/:id', getIngredients);
 router.post('/recipes', postRecipe);
+router.put('/recipes', putRecipe);
 
 function getDefaultRoute(req, res) {
   res.status(200).send('Hello Practice API');
@@ -58,6 +59,25 @@ function postRecipe(req, res) {
   } else {
     recipeData.recipes.push(data);
     res.status(201).send({
+      'Response Body': 'None',
+      'Status': res.statusCode
+    });
+  }
+}
+
+function putRecipe(req, res) {
+  let data = req.body;
+  let objIndex = recipeData.recipes.findIndex(obj => obj.name === data.name);
+  if (objIndex < 0) {
+    res.status(404).send({
+      'Response Body (JSON)': {
+        'error': 'Recipe does not exists'
+      },
+      'Status': res.statusCode
+    });
+  } else {
+    recipeData.recipes[objIndex] = data;
+    res.status(204).send({
       'Response Body': 'None',
       'Status': res.statusCode
     });
